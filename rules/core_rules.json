@@ -1,0 +1,9 @@
+{
+  "version": "1.2",
+  "game_modes": ["Crawl", "Adventure"],
+  "core_rules": {
+    "initiative": "Card based or random",
+    "actions": ["Move", "Attack", "Interact"],
+    "stamina": "Resource for actions"
+  }
+}

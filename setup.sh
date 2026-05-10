@@ -1,0 +1,1 @@
+mkdir -p assets data rules/src/engine src/ui src/combat src/campaign src/utils
