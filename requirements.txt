@@ -1,3 +1,2 @@
-# Python dependencies for Middara PC Game
-pygame>=2.6.0
-requests
+pygame
+numpy
