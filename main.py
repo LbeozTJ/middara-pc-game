@@ -7,13 +7,13 @@ from pygame.locals import *
 pygame.init()
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Middara PC Game - Phase 1")
+pygame.display.set_caption("Middara PC Game - Phase 3")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 24)
 small_font = pygame.font.SysFont("Arial", 18)
 log_font = pygame.font.SysFont("Arial", 16)
 
-# Phase 1: Rule Engine + Character + Dice (exact match to your screenshot)
+# Phase 1: Rule Engine + Character + Dice
 print("pygame-ce 2.5.7 (SDL 2.32.10, Python 3.14.4)")
 print("Rules loaded successfully for Phase 1")
 RULES = ["Crawl", "Adventure"]
@@ -24,24 +24,44 @@ def roll_dice(num_dice=2, sides=6):
     print(f"Dice roll example ({num_dice}d{sides}): {result}")
     return result
 
-class Hero:
+# Phase 3: Character Creation & Management (Full hero sheet + inventory)
+class Character:
     def __init__(self, name="Rook the Warrior"):
         self.name = name
         self.level = 1
         self.stats = {"strength": 5, "agility": 5, "intelligence": 5, "will": 5}
+        self.max_stats = {"strength": 10, "agility": 10, "intelligence": 10, "will": 10}
+        self.points = 5  # Point buy points
+        self.inventory = ["Iron Sword", "Leather Armor", "Health Potion x3"]
+        self.gear = {"weapon": None, "armor": None, "accessory": None}
         print(f"Character: {self.name} (Lvl {self.level}) Stats: {self.stats}")
     
     def level_up(self):
         self.level += 1
-        print(f"{self.name} leveled up to {self.level}")
+        self.points += 2
+        print(f"{self.name} leveled up to {self.level}! +2 stat points available.")
+    
+    def allocate_stat(self, stat):
+        if self.points > 0 and self.stats[stat] < self.max_stats[stat]:
+            self.stats[stat] += 1
+            self.points -= 1
+            print(f"{stat.capitalize()} increased to {self.stats[stat]} (Points left: {self.points})")
+            return True
+        return False
+    
+    def equip_gear(self, item, slot):
+        if item in self.inventory:
+            self.inventory.remove(item)
+            if self.gear[slot]:
+                self.inventory.append(self.gear[slot])
+            self.gear[slot] = item
+            print(f"Equipped {item} to {slot}.")
 
-hero = Hero()
+hero = Character()
 roll_dice(2, 6)
 hero.level_up()
-print("Phase 1 ready: Basic dice, character, rules loaded.")
-print("Next: Expand to full combat and UI.")
 
-# Phase 2: Full Tactical Combat (reactions, terrain, LOS, status effects)
+# Phase 2: Full Tactical Combat (unchanged from previous commit)
 class CombatGrid:
     def __init__(self):
         self.width = 10
@@ -125,9 +145,39 @@ class CombatGrid:
         else:
             self.log("No LOS - enemy cannot attack")
 
+def draw_character_screen(hero):
+    screen.fill((30, 30, 60))
+    title = font.render("CHARACTER SHEET - PHASE 3", True, (255, 215, 0))
+    screen.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 30))
+    
+    # Stats
+    y = 100
+    for stat, value in hero.stats.items():
+        text = small_font.render(f"{stat.capitalize()}: {value} / {hero.max_stats[stat]}  (Points left: {hero.points})", True, (255, 255, 255))
+        screen.blit(text, (100, y))
+        y += 30
+    
+    # Inventory
+    inv_title = small_font.render("INVENTORY", True, (255, 215, 0))
+    screen.blit(inv_title, (600, 100))
+    for i, item in enumerate(hero.inventory):
+        text = small_font.render(f"- {item}", True, (200, 200, 255))
+        screen.blit(text, (600, 130 + i * 25))
+    
+    # Gear
+    gear_title = small_font.render("EQUIPPED GEAR", True, (255, 215, 0))
+    screen.blit(gear_title, (600, 300))
+    for i, (slot, item) in enumerate(hero.gear.items()):
+        text = small_font.render(f"{slot.capitalize()}: {item or 'Empty'}", True, (200, 200, 255))
+        screen.blit(text, (600, 330 + i * 25))
+    
+    instructions = small_font.render("1-4: Allocate stat points | E: Equip first item | L: Level up | ESC: Back", True, (255, 100, 100))
+    screen.blit(instructions, (100, 650))
+
 def main():
     combat_grid = None
     in_combat = False
+    in_character = False
     dice_result = None
     running = True
     
@@ -137,12 +187,26 @@ def main():
                 running = False
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    running = False
-                elif event.key == K_r and not in_combat:
+                    if in_character:
+                        in_character = False
+                    else:
+                        running = False
+                elif event.key == K_r and not in_combat and not in_character:
                     dice_result = [random.randint(1, 20) for _ in range(2)]
-                elif event.key == K_b:
+                elif event.key == K_b and not in_character:
                     combat_grid = CombatGrid()
                     in_combat = True
+                elif event.key == K_c:
+                    in_character = not in_character
+                    in_combat = False
+                elif in_character:
+                    if event.key == K_1: hero.allocate_stat("strength")
+                    elif event.key == K_2: hero.allocate_stat("agility")
+                    elif event.key == K_3: hero.allocate_stat("intelligence")
+                    elif event.key == K_4: hero.allocate_stat("will")
+                    elif event.key == K_l: hero.level_up()
+                    elif event.key == K_e and hero.inventory:
+                        hero.equip_gear(hero.inventory[0], "weapon")
                 elif in_combat:
                     if event.key == K_UP: combat_grid.move_unit("hero", 0, -1)
                     elif event.key == K_DOWN: combat_grid.move_unit("hero", 0, 1)
@@ -154,11 +218,10 @@ def main():
         
         screen.fill((20, 20, 40))
         
-        title = font.render("MIDDARA PC GAME - PHASE 2 COMBAT TEST (Python 3.14 Ready)", True, (255, 215, 0))
-        screen.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 20))
-        
-        if in_combat and combat_grid:
-            # Draw grid
+        if in_character:
+            draw_character_screen(hero)
+        elif in_combat and combat_grid:
+            # Draw grid (same as Phase 2)
             for y in range(combat_grid.height):
                 for x in range(combat_grid.width):
                     color = (80, 80, 80) if combat_grid.grid[y][x]["terrain"] == "floor" else (40, 40, 40)
@@ -168,7 +231,7 @@ def main():
                     elif combat_grid.grid[y][x]["occupied"] == "enemy":
                         pygame.draw.circle(screen, (255, 0, 0), (x*50 + 104, y*50 + 144), 20)
             
-            # Health bars + labels
+            # Health bars
             pygame.draw.rect(screen, (0, 255, 0), (80, 80, 200, 20))
             pygame.draw.rect(screen, (255, 0, 0), (80, 80, 200 * (combat_grid.hero_hp / combat_grid.hero_max_hp), 20))
             pygame.draw.rect(screen, (255, 0, 0), (900, 80, 200, 20))
@@ -178,24 +241,24 @@ def main():
             screen.blit(h_text, (80, 50))
             screen.blit(e_text, (900, 50))
             
-            # Combat log
             log_title = small_font.render("COMBAT LOG", True, (255, 215, 0))
             screen.blit(log_title, (800, 150))
             for i, msg in enumerate(combat_grid.combat_log[-12:]):
                 log_line = log_font.render(msg, True, (200, 200, 255))
                 screen.blit(log_line, (800, 180 + i * 22))
             
-            controls = small_font.render("Arrows: Move | A: Attack | E: Enemy Turn | R: Reaction | ESC: Quit", True, (255, 100, 100))
+            controls = small_font.render("Arrows: Move | A: Attack | E: Enemy Turn | R: Reaction | C: Character | ESC: Quit", True, (255, 100, 100))
             screen.blit(controls, (80, 620))
         else:
-            instr = small_font.render("Press B to START COMBAT TEST (Phase 2) | R = Roll Dice", True, (200, 200, 200))
+            title = font.render("MIDDARA PC GAME - PHASE 3 (Character + Combat + Python 3.14)", True, (255, 215, 0))
+            screen.blit(title, (SCREEN_WIDTH//2 - title.get_width()//2, 30))
+            instr = small_font.render("B = Combat | C = Character Sheet | R = Dice | ESC = Quit", True, (200, 200, 200))
             screen.blit(instr, (50, 100))
             if dice_result:
                 dice_text = font.render(f"Dice: {dice_result} (Sum: {sum(dice_result)})", True, (0, 255, 100))
                 screen.blit(dice_text, (50, 180))
-        
-        status = small_font.render("✅ Python 3.14 + Phase 2 Tactical Combat Fully Working", True, (150, 255, 150))
-        screen.blit(status, (50, SCREEN_HEIGHT - 40))
+            status = small_font.render("✅ Phase 3: Full Character Creation + Inventory + Combat Ready", True, (150, 255, 150))
+            screen.blit(status, (50, SCREEN_HEIGHT - 40))
         
         pygame.display.flip()
         clock.tick(60)
