@@ -1,2 +1,2 @@
-pygame
-numpy
+pygame>=2.6.0
+Pillow>=10.4.0  # For debug mode screenshots and image handling
