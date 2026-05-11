@@ -3,7 +3,88 @@
   "game_modes": ["Crawl", "Adventure"],
   "core_rules": {
     "initiative": "Card based or random",
-    "actions": ["Move", "Attack", "Interact"],
-    "stamina": "Resource for actions"
-  }
+    "actions": ["Move", "Attack", "Interact", "Cast Spell", "Use Item"],
+    "stamina": "Resource for actions, SP = Stamina Points",
+    "conviction": "Resource for special abilities and reactions",
+    "symbols": {
+      "tags": ["DOUBLE", "UNIQUE", "CURSED", "LEGENDARY"],
+      "conditions": ["Poisoned", "Burning", "Stunned", "Bleeding"],
+      "icons": ["SP", "CV", "HP", "AP", "DMG", "HIT", "MISS", "CRIT"]
+    },
+    "dice_types": ["d6", "d20", "custom attack dice with hit/miss symbols"],
+    "terrain": ["Elevation", "Currents", "Difficult Terrain"],
+    "combat": {
+      "reactions": true,
+      "line_of_sight": true,
+      "status_effects": true
+    }
+  },
+  "sample_items": {
+    "iron_sword": {
+      "name": "Iron Sword",
+      "type": "Weapon",
+      "image": "assets/iron_sword_card.png",
+      "abilities": ["+1 Attack Die (d6)", "Melee Range"],
+      "bonuses": {"strength": 1},
+      "description": "Basic starting weapon. Reliable in close combat."
+    },
+    "guardian_core": {
+      "name": "Guardian Core",
+      "type": "Core",
+      "image": "assets/guardian_core_card.png",
+      "abilities": ["+2 Armor", "Reflect 1 damage on hit"],
+      "bonuses": {"will": 1},
+      "max_stamina_bonus": 2,
+      "description": "Defensive core that bolsters stamina and defense."
+    },
+    "ancient_relic": {
+      "name": "Ancient Relic",
+      "type": "Relic",
+      "image": "assets/ancient_relic_card.png",
+      "abilities": ["+1 Conviction", "Once per round: Reroll a failed skill check"],
+      "bonuses": {"intelligence": 1},
+      "description": "Mystical relic for enhanced conviction and luck."
+    },
+    "swift_accessory": {
+      "name": "Swift Boots",
+      "type": "Accessory",
+      "image": "assets/swift_accessory_card.png",
+      "abilities": ["+1 Move Action", "Dodge chance +10%"],
+      "bonuses": {"agility": 2},
+      "description": "Enhances mobility and evasion in tactics."
+    },
+    "health_potion": {
+      "name": "Health Potion",
+      "type": "Consumable",
+      "image": "assets/health_potion_card.png",
+      "abilities": ["Restore 5 HP", "Single use"],
+      "bonuses": {},
+      "description": "Consumable item. Use to heal during or between encounters."
+    },
+    "stamina_elixir": {
+      "name": "Stamina Elixir",
+      "type": "Consumable",
+      "image": "assets/stamina_elixir_card.png",
+      "abilities": ["Restore 5 SP", "Single use"],
+      "bonuses": {},
+      "description": "Consumable item. Use to regain stamina for actions."
+    },
+    "fire_dagger": {
+      "name": "Fire Dagger",
+      "type": "Weapon",
+      "image": "assets/fire_dagger_card.png",
+      "abilities": ["+1 Attack Die (d6)", "Fire DMG tag", "Range: Melee"],
+      "bonuses": {"agility": 1},
+      "description": "Weapon with elemental tag. Proper mechanics for tags/symbols applied in combat."
+    }
+  },
+  "weapons": [
+    {"id": "iron_sword", "name": "Iron Sword", "type": "Weapon", "tags": [], "base_damage": 1},
+    {"id": "fire_dagger", "name": "Fire Dagger", "type": "Weapon", "tags": ["FIRE"], "base_damage": 2}
+  ],
+  "consumables": [
+    {"id": "health_potion", "name": "Health Potion", "type": "Consumable", "effect": "heal 5 HP"},
+    {"id": "stamina_elixir", "name": "Stamina Elixir", "type": "Consumable", "effect": "restore 5 SP"}
+  ],
+  "equippables": ["weapon", "core", "relic", "accessory"]
 }
