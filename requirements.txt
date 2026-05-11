@@ -1,0 +1,3 @@
+pygame==2.6.1
+Pillow==10.4.0  # For potential image handling from Drive assets
+json5==0.9.25   # For robust JSON rules if needed
