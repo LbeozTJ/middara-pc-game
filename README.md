@@ -40,8 +40,8 @@ middara-pc-game/
 ├── /src/
 │   ├── engine/      # Rules, dice, state machine
 │   ├── ui/          # Interface, rendering, debug_panel.py
-│   ├── combat/      # Battle logic
-│   ├── campaign/    # Story and progression
+│   ├── combat/      # Battle logic (Phase 2 stub tested)
+│   ├── campaign/    # Story and progression (stub)
 │   └── utils/       # Logging, screenshot helpers
 ├── /debug/          # Auto-generated debug reports & logs
 ├── /assets/         # Placeholders (replace with your scans or free assets)
@@ -58,11 +58,18 @@ middara-pc-game/
 6. Use the in-game **Flag Issue** button to instantly capture context and share relevant debug JSON with Grok for faster fixes.
 
 ## Priority Roadmap
-- **Phase 1**: Rule parser + basic dice/character engine + **Debug & Flagging UI** (complete with toggle, state inspector, and report generator)
-- Phase 2: Full combat resolution with reactions + advanced rule enforcement
-- Phase 3: Character creation screen + inventory + gear management
-- Phase 4: Campaign map, exploration, and narrative choices
+- **Phase 1**: Rule parser + basic dice/character engine + **Debug & Flagging UI** (COMPLETE - fully tested and verified May 2026)
+- **Phase 2**: Full combat resolution with reactions + advanced rule enforcement (STUB IMPLEMENTED & TESTED - dice/character integrated; full LOS/terrain/reactions next)
+- Phase 3: Character creation screen + inventory + gear management (core Character class ready)
+- Phase 4: Campaign map, exploration, and narrative choices (stub ready)
 - Phase 5: Polish, audio placeholders, exportable character sheets, and expanded debug tools
+
+## Testing Summary (May 10, 2026)
+All phases tested via automated harness (press 'T' in-game):
+- Phase 1: Rule loading, dice rolls (d6/d20/custom), skill/attack checks, full character lifecycle (level, equip/exhaust/flip, inventory, consumables) - ALL PASS
+- Phase 2: Combat attack resolution with symbol output - PASS
+- Higher phases: Stubs functional
+No bugs found. Ready for full Phase 2 implementation on next request.
 
 ## Legal & Notes
 - Strictly personal backup/implementation of my owned physical copy.
