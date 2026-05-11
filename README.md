@@ -1,5 +1,4 @@
 # Middara PC Game - Personal Digital Edition
-
 **100% Personal Use Only** — For my private offline play. No distribution, no sharing of code/assets.
 
 ## Project Goal
@@ -22,7 +21,7 @@ A complete, offline desktop application that faithfully implements Middara (Unin
 
 ## How to Run (Local)
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/LbeozTJ/middara-pc-game.git
 cd middara-pc-game
 pip install -r requirements.txt
 python main.py
@@ -34,15 +33,15 @@ middara-pc-game/
 ├── README.md
 ├── requirements.txt
 ├── main.py
-├── /rules/          # Parsed rule sections (auto-generated)
+├── /rules/ # Parsed rule sections (auto-generated)
 ├── /src/
-│   ├── engine/      # Rules, dice, state machine
-│   ├── ui/          # Interface and rendering
-│   ├── combat/      # Battle logic
-│   ├── campaign/    # Story and progression
-│   └── utils/
-├── /assets/         # Placeholders (replace with your scans or free assets)
-├── /data/           # Saved games
+│ ├── engine/ # Rules, dice, state machine
+│ ├── ui/ # Interface and rendering
+│ ├── combat/ # Battle logic
+│ ├── campaign/ # Story and progression
+│ └── utils/
+├── /assets/ # Placeholders (replace with your scans or free assets)
+├── /data/ # Saved games
 └── .gitignore
 ```
 
@@ -65,5 +64,5 @@ middara-pc-game/
 - All artwork/assets are placeholders until replaced by user-provided files.
 - Feedback on rule ambiguities will be resolved by referencing the official PDF.
 
-Last updated: May 2026  
+Last updated: May 2026
 Built with Grok (xAI) + Connectors
